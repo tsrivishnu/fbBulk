@@ -31,8 +31,23 @@ class FacebookAccount < ActiveRecord::Base
   end
 
   def get_feed
-    response = RestClient.get "https://graph.facebook.com/me/feed", :params => { :access_token => self.access_token, :limit => 50 }
-    ActiveSupport::JSON.decode( response.body )
+    response = RestClient.get "https://graph.facebook.com/me/feed", :params => { :access_token => self.access_token, :limit => 110 }
+    ActiveSupport::JSON.decode( response.body )["data"]
   end
+
+  def post_comment( post_id, message )
+    RestClient.post "https://graph.facebook.com/#{post_id}/comments", { :access_token => self.access_token, :message => message }
+  end
+
+  def like_post( post_id )
+    RestClient.post "https://graph.facebook.com/#{post_id}/likes", { :access_token => self.access_token }
+  end
+
+  def add_comment_and_like_on_post( post_id, message )
+    post_comment( post_id, message )
+    like_post( post_id )
+  end
+
+
  
 end
