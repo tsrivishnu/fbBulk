@@ -32,7 +32,7 @@ class FacebookAccount < ActiveRecord::Base
 
   def get_feed
     response = RestClient.get "https://graph.facebook.com/me/feed", :params => { :access_token => self.access_token, :limit => 110 }
-    ActiveSupport::JSON.decode( response.body )["data"]
+    ActiveSupport::JSON.decode( response.body )
   end
 
   def post_comment( post_id, message )
@@ -46,6 +46,25 @@ class FacebookAccount < ActiveRecord::Base
   def add_comment_and_like_on_post( post_id, message )
     post_comment( post_id, message )
     like_post( post_id )
+  end
+
+  # words = ["hbd", "happy", "birthday", "bday", "b'day", "bdy", "happie", "hpy", "returns"]
+  # pass the words array to match in the posts
+  # a random message from message_array will be taken and added to the comment
+  # messages = ["Thank you so much", "Thank you", "Thanks for the wishes", "Thank you for the wishes", "Thanks a lot", "Many Thanks"]
+  def like_and_post_on_matching_feed( words_to_match, messages_array )
+    regex = /#{words_to_match.map{|w|Regexp.escape(w)}.join('|')}/i
+    
+    messages = []
+    
+    posts = get_feed.each do |post|
+      name = post["message"]
+      if regex === name
+        message = "#{messages_array.sample} #{post['from']['name']}"
+        messages << message
+        add_comment_and_like_on_post( post["id"], message )
+      end
+    end
   end
 
 
