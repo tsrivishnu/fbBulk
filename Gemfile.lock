@@ -44,7 +44,7 @@ GEM
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.4)
     erubis (2.7.0)
-    execjs (2.0.2)
+    execjs (2.8.1)
     hike (1.2.3)
     i18n (0.6.9)
     jbuilder (1.5.3)
@@ -110,7 +110,7 @@ GEM
     turbolinks (2.1.0)
       coffee-rails
     tzinfo (0.3.61)
-    uglifier (2.4.0)
+    uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
 
